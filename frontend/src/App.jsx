@@ -3,14 +3,21 @@ import Navbar from './components/Navbar';
 import UploadDropzone from './components/UploadDropzone';
 import Terrain3DViewer from './components/Terrain3DViewer';
 import ResultsDashboard from './components/ResultsDashboard';
+import ServerLoader from './components/ServerLoader';
 import { Eye, Layers } from 'lucide-react';
 import { API_BASE } from './config';
 
 export default function App() {
+  const [isBackendReady, setIsBackendReady] = useState(false);
   const [currentResult, setCurrentResult] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [viewMode, setViewMode] = useState('3d');
   const [transectData, setTransectData] = useState(null);
+
+  if (!isBackendReady) {
+    return <ServerLoader onReady={() => setIsBackendReady(true)} />;
+  }
+
 
   const handleProcessUpload = async (formData) => {
     setIsProcessing(true);
@@ -81,7 +88,7 @@ export default function App() {
   const unit = isGeo ? 'm' : 'rDSM';
 
   return (
-    <div className="app-container">
+    <div className="app-container fade-in">
       <Navbar
         hasResult={!!currentResult}
         onNewUpload={() => setCurrentResult(null)}
